@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TechPro.tg — Contact</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<nav>
+  <div class="container nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon"><svg viewBox="0 0 24 24"><path d="M13 3L4 14h7l-2 7 9-11h-7l2-7z"/></svg></div>
+      Tech<span>Pro</span>.tg
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html" class="nav-link">Accueil</a>
+      <a href="produits.html" class="nav-link">Produits</a>
+      <a href="about.html" class="nav-link">À propos</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+    </div>
+    <div class="nav-cta">
+      <a href="contact.html" class="btn btn-primary btn-sm">Demander un devis</a>
+    </div>
+    <button class="nav-mobile-btn" id="navMobileBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="container">
+    <div class="section-label">Nous contacter</div>
+    <h1>Parlons de votre <span class="gradient-text">projet</span></h1>
+    <p style="margin-top:12px">Devis, questions, commandes — notre équipe répond sous 24h.</p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="contact-info">
+        <div class="contact-card">
+          <div class="cc-icon">
+            <svg viewBox="0 0 24 24" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div>
+            <h4>Email</h4>
+            <p><a href="mailto:contact@techpro.tg" style="color:var(--accent)">contact@techpro.tg</a></p>
+            <p style="margin-top:2px">Réponse sous 24h ouvrées</p>
+          </div>
+        </div>
+        <div class="contact-card">
+          <div class="cc-icon">
+            <svg viewBox="0 0 24 24" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.43 2 2 0 0 1 3.6 1.27h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.91a16 16 0 0 0 6 6l.91-.91a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 21.73 16z"/></svg>
+          </div>
+          <div>
+            <h4>Téléphone</h4>
+            <p><a href="tel:+22890000000" style="color:var(--accent)">+228 90 00 00 00</a></p>
+            <p style="margin-top:2px">Lun–Ven, 8h–18h</p>
+          </div>
+        </div>
+        <div class="contact-card">
+          <div class="cc-icon">
+            <svg viewBox="0 0 24 24" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div>
+            <h4>Adresse</h4>
+            <p>Lomé, Togo</p>
+            <p style="margin-top:2px">Visites sur rendez-vous</p>
+          </div>
+        </div>
+        <div style="background:var(--panel);border:1px solid var(--border2);border-radius:12px;overflow:hidden">
+          <img src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600&q=70" alt="Bureau tech" style="width:100%;height:180px;object-fit:cover;display:block">
+        </div>
+      </div>
+
+      <div class="contact-form">
+        <h3 style="margin-bottom:24px">Envoyer un message</h3>
+        <form id="contactForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="flabel" for="firstName">Prénom</label>
+              <input type="text" id="firstName" class="finput" placeholder="Jean" required>
+            </div>
+            <div class="form-group">
+              <label class="flabel" for="lastName">Nom</label>
+              <input type="text" id="lastName" class="finput" placeholder="Dupont" required>
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="flabel" for="email">Email professionnel</label>
+            <input type="email" id="email" class="finput" placeholder="jean@entreprise.tg" required>
+          </div>
+          <div class="form-group">
+            <label class="flabel" for="company">Entreprise</label>
+            <input type="text" id="company" class="finput" placeholder="Nom de votre société">
+          </div>
+          <div class="form-group">
+            <label class="flabel" for="subject">Sujet</label>
+            <input type="text" id="subject" class="finput" placeholder="Demande de devis — Serveur HP ProLiant">
+          </div>
+          <div class="form-group">
+            <label class="flabel" for="message">Message</label>
+            <textarea id="message" class="finput" rows="5" placeholder="Décrivez votre besoin, les quantités souhaitées, votre budget approximatif…" required></textarea>
+          </div>
+          <button type="submit" class="btn btn-primary" style="width:100%;justify-content:center">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+            Envoyer le message
+          </button>
+        </form>
+        <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:16px">Vos données restent confidentielles et ne sont jamais partagées.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-main">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo">
+          <div class="nav-logo-icon"><svg viewBox="0 0 24 24"><path d="M13 3L4 14h7l-2 7 9-11h-7l2-7z"/></svg></div>
+          Tech<span>Pro</span>.tg
+        </a>
+        <p>Votre partenaire en équipements technologiques haute performance au Togo et en Afrique de l'Ouest.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Navigation</h5>
+        <ul>
+          <li><a href="index.html">Accueil</a></li>
+          <li><a href="produits.html">Catalogue</a></li>
+          <li><a href="about.html">À propos</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Catégories</h5>
+        <ul>
+          <li><a href="produits.html?cat=workstation">Stations de travail</a></li>
+          <li><a href="produits.html?cat=server">Serveurs</a></li>
+          <li><a href="produits.html?cat=network">Réseau</a></li>
+          <li><a href="produits.html?cat=display">Écrans</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Contact</h5>
+        <ul>
+          <li><a href="mailto:contact@techpro.tg">contact@techpro.tg</a></li>
+          <li><a href="tel:+22890000000">+228 90 00 00 00</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 TechPro.tg — Tous droits réservés</span>
+      <span>Lomé, Togo</span>
+    </div>
+  </div>
+</footer>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

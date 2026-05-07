@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TechPro Admin</title>
+<link rel="stylesheet" href="../css/style.css">
+<style>
+/* ── ADMIN SPECIFIC ── */
+.admin-layout{display:flex;min-height:100vh}
+.admin-sidebar{width:240px;flex-shrink:0;background:var(--panel);border-right:1px solid var(--border2);display:flex;flex-direction:column;position:fixed;top:0;bottom:0;z-index:100}
+.admin-logo{padding:24px 20px;border-bottom:1px solid var(--border2)}
+.admin-logo-badge{display:inline-flex;align-items:center;gap:8px;background:rgba(255,77,109,.1);border:1px solid rgba(255,77,109,.25);border-radius:6px;padding:3px 8px;font-size:10px;color:var(--red);letter-spacing:1px;text-transform:uppercase;margin-top:8px}
+.admin-nav{flex:1;padding:16px 10px;overflow-y:auto}
+.admin-nav-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:8px;font-size:13px;color:var(--muted2);cursor:pointer;border:none;background:none;width:100%;text-align:left;transition:var(--tr)}
+.admin-nav-item svg{width:16px;height:16px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:2}
+.admin-nav-item:hover,.admin-nav-item.active{background:rgba(0,200,255,.08);color:var(--accent)}
+.admin-sidebar-foot{padding:16px;border-top:1px solid var(--border2);font-size:11px;color:var(--muted)}
+.admin-sidebar-foot a{color:var(--accent);text-decoration:none}
+.admin-main{margin-left:240px;flex:1;padding:32px;min-height:100vh}
+.admin-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;flex-wrap:wrap;gap:12px}
+.admin-title{font-family:'Syne',sans-serif;font-size:22px;font-weight:800}
+.admin-panel{background:var(--panel);border:1px solid var(--border2);border-radius:16px;padding:24px;margin-bottom:24px}
+.admin-panel h3{font-family:'Syne',sans-serif;font-size:16px;font-weight:700;margin-bottom:20px;padding-bottom:14px;border-bottom:1px solid var(--border2)}
+
+/* Login screen */
+.login-screen{position:fixed;inset:0;z-index:999;background:var(--bg);display:flex;align-items:center;justify-content:center}
+.login-card{background:var(--panel);border:1px solid var(--border);border-radius:20px;padding:40px;width:100%;max-width:400px;box-shadow:0 0 60px rgba(0,200,255,.12)}
+.login-card h2{font-family:'Syne',sans-serif;font-weight:800;margin-bottom:6px}
+.login-card p{font-size:12px;color:var(--muted2);margin-bottom:28px}
+.login-error{background:rgba(255,77,109,.1);border:1px solid rgba(255,77,109,.25);color:var(--red);padding:10px 14px;border-radius:8px;font-size:13px;margin-bottom:16px;display:none}
+.login-error.show{display:block}
+
+/* Product table */
+.products-table{width:100%;border-collapse:collapse}
+.products-table th{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);padding:8px 12px;text-align:left;border-bottom:1px solid var(--border2)}
+.products-table td{padding:12px;border-bottom:1px solid var(--border2);font-size:13px;vertical-align:middle}
+.products-table tr:last-child td{border-bottom:none}
+.products-table tr:hover td{background:rgba(255,255,255,.02)}
+.prod-thumb{width:48px;height:36px;border-radius:6px;object-fit:cover}
+.action-btns{display:flex;gap:6px}
+
+/* Form grid */
+.form-2col{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.toggle{display:flex;align-items:center;gap:10px;cursor:pointer;font-size:13px}
+.toggle input{accent-color:var(--accent);width:18px;height:18px}
+
+/* Stats mini */
+.admin-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:24px}
+.admin-stat{background:var(--panel);border:1px solid var(--border2);border-radius:12px;padding:16px;text-align:center}
+.admin-stat .num{font-family:'Syne',sans-serif;font-size:24px;font-weight:800;color:var(--accent)}
+.admin-stat .lbl{font-size:11px;color:var(--muted);margin-top:2px}
+
+@media(max-width:900px){.admin-stats{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:768px){.admin-sidebar{display:none}.admin-main{margin-left:0}.form-2col{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<!-- ══ LOGIN SCREEN ══ -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-card fade-in">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:20px">
+      <div class="nav-logo-icon"><svg viewBox="0 0 24 24"><path d="M13 3L4 14h7l-2 7 9-11h-7l2-7z" fill="white"/></svg></div>
+      <div>
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:16px">Tech<span style="color:var(--accent)">Pro</span>.tg</div>
+        <div style="font-size:10px;color:var(--muted);letter-spacing:1px">ESPACE ADMINISTRATION</div>
+      </div>
+    </div>
+    <h2>Connexion Admin</h2>
+    <p>Accès réservé aux administrateurs du domaine <strong>techpro.tg</strong></p>
+    <div class="login-error" id="loginError">Identifiants incorrects. Réessayez.</div>
+    <div class="form-group">
+      <label class="flabel">Identifiant</label>
+      <input type="text" id="loginUser" class="finput" placeholder="admin" autocomplete="username">
+    </div>
+    <div class="form-group" style="margin-bottom:20px">
+      <label class="flabel">Mot de passe</label>
+      <input type="password" id="loginPass" class="finput" placeholder="••••••••" autocomplete="current-password">
+    </div>
+    <button class="btn btn-primary" style="width:100%;justify-content:center" id="loginBtn">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"/><polyline points="10 17 15 12 10 7"/><line x1="15" y1="12" x2="3" y2="12"/></svg>
+      Se connecter
+    </button>
+    <p style="font-size:11px;color:var(--muted);text-align:center;margin-top:14px">
+      Domaine AD : <span style="color:var(--accent)">techpro.tg</span> — DC : <span style="color:var(--accent)">10.0.10.3</span>
+    </p>
+  </div>
+</div>
+
+<!-- ══ ADMIN APP ══ -->
+<div class="admin-layout" id="adminApp" style="display:none">
+  <aside class="admin-sidebar">
+    <div class="admin-logo">
+      <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:16px">Tech<span style="color:var(--accent)">Pro</span>.tg</div>
+      <div class="admin-logo-badge">Admin</div>
+    </div>
+    <nav class="admin-nav">
+      <button class="admin-nav-item active" data-section="dashboard">
+        <svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Tableau de bord
+      </button>
+      <button class="admin-nav-item" data-section="products">
+        <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        Produits
+      </button>
+      <button class="admin-nav-item" data-section="add">
+        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        Ajouter un produit
+      </button>
+      <button class="admin-nav-item" data-section="export">
+        <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Exporter données
+      </button>
+    </nav>
+    <div class="admin-sidebar-foot">
+      <div id="adminUserLabel" style="margin-bottom:6px;color:var(--text)"></div>
+      Domaine : <span style="color:var(--accent)">techpro.tg</span><br>
+      DC : 10.0.10.3<br><br>
+      <a href="../index.html">← Voir le site</a>
+      &nbsp;·&nbsp;
+      <a href="#" id="logoutBtn">Déconnexion</a>
+    </div>
+  </aside>
+
+  <main class="admin-main">
+
+    <!-- DASHBOARD -->
+    <div id="sec-dashboard">
+      <div class="admin-header">
+        <div class="admin-title">Tableau de bord</div>
+        <div style="font-size:12px;color:var(--muted)" id="dateLabel"></div>
+      </div>
+      <div class="admin-stats">
+        <div class="admin-stat"><div class="num" id="statTotal">-</div><div class="lbl">Produits</div></div>
+        <div class="admin-stat"><div class="num" id="statFeatured">-</div><div class="lbl">Mis en avant</div></div>
+        <div class="admin-stat"><div class="num" id="statCats">-</div><div class="lbl">Catégories</div></div>
+        <div class="admin-stat"><div class="num" style="color:var(--green)">✓</div><div class="lbl">Site en ligne</div></div>
+      </div>
+      <div class="admin-panel">
+        <h3>Aperçu du catalogue</h3>
+        <table class="products-table" id="dashTable"></table>
+      </div>
+    </div>
+
+    <!-- PRODUCTS LIST -->
+    <div id="sec-products" style="display:none">
+      <div class="admin-header">
+        <div class="admin-title">Gestion des produits</div>
+        <button class="btn btn-primary btn-sm" onclick="showSection('add')">+ Ajouter un produit</button>
+      </div>
+      <div class="admin-panel" style="padding:0;overflow:auto">
+        <table class="products-table" id="fullTable" style="min-width:700px"></table>
+      </div>
+    </div>
+
+    <!-- ADD / EDIT PRODUCT -->
+    <div id="sec-add" style="display:none">
+      <div class="admin-header">
+        <div class="admin-title" id="formTitle">Ajouter un produit</div>
+      </div>
+      <div class="admin-panel">
+        <form id="productForm">
+          <input type="hidden" id="editId">
+          <div class="form-2col">
+            <div class="form-group">
+              <label class="flabel">Nom du produit *</label>
+              <input type="text" id="fName" class="finput" required placeholder="Dell Precision 5690">
+            </div>
+            <div class="form-group">
+              <label class="flabel">Catégorie *</label>
+              <select id="fCat" class="finput">
+                <option value="workstation">Station de travail</option>
+                <option value="server">Serveur</option>
+                <option value="network">Réseau</option>
+                <option value="display">Écran</option>
+                <option value="accessory">Périphérique</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-2col">
+            <div class="form-group">
+              <label class="flabel">Prix (FCFA) *</label>
+              <input type="number" id="fPrice" class="finput" required placeholder="1500000" min="0">
+            </div>
+            <div class="form-group">
+              <label class="flabel">Badge (optionnel)</label>
+              <input type="text" id="fBadge" class="finput" placeholder="Nouveau, Bestseller, Pro…">
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="flabel">Couleur du badge</label>
+            <select id="fBadgeColor" class="finput">
+              <option value="accent">Cyan (défaut)</option>
+              <option value="blue">Bleu</option>
+              <option value="green">Vert</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="flabel">URL de l'image *</label>
+            <input type="url" id="fImg" class="finput" required placeholder="https://images.unsplash.com/photo-…?w=600&q=80">
+          </div>
+          <div class="form-group">
+            <label class="flabel">Description courte *</label>
+            <textarea id="fDesc" class="finput" rows="3" required placeholder="Description du produit visible dans la carte…"></textarea>
+          </div>
+          <div class="form-group">
+            <label class="flabel">Spécifications (une par ligne)</label>
+            <textarea id="fSpecs" class="finput" rows="4" placeholder="Intel Core Ultra 9&#10;64 Go DDR5&#10;2 To NVMe SSD"></textarea>
+          </div>
+          <label class="toggle form-group">
+            <input type="checkbox" id="fFeatured">
+            <span>Mettre en avant sur la page d'accueil</span>
+          </label>
+          <div style="display:flex;gap:10px;margin-top:8px">
+            <button type="submit" class="btn btn-primary" id="formSubmitBtn">Enregistrer le produit</button>
+            <button type="button" class="btn btn-outline" onclick="resetForm()">Annuler</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- EXPORT -->
+    <div id="sec-export" style="display:none">
+      <div class="admin-header">
+        <div class="admin-title">Exporter / Sauvegarder</div>
+      </div>
+      <div class="admin-panel">
+        <h3>Données du catalogue</h3>
+        <p style="font-size:13px;color:var(--muted2);margin-bottom:20px;line-height:1.7">Exportez le catalogue produits au format JSON. Vous pouvez remplacer le contenu de <code style="background:var(--bg2);padding:2px 6px;border-radius:4px">js/data.js</code> avec ces données pour mettre à jour le site GitHub.</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-primary" onclick="exportJSON()">Télécharger catalog.json</button>
+          <button class="btn btn-outline" onclick="showRaw()">Voir le JSON brut</button>
+        </div>
+        <pre id="rawJson" style="display:none;background:var(--bg2);padding:16px;border-radius:10px;margin-top:16px;font-size:11px;overflow:auto;max-height:400px;color:var(--muted2);white-space:pre-wrap;word-break:break-all"></pre>
+        <div style="margin-top:24px;padding:16px;background:rgba(0,200,255,.05);border:1px solid var(--border);border-radius:10px">
+          <h4 style="margin-bottom:8px">Instructions GitHub Pages</h4>
+          <ol style="padding-left:20px;font-size:12px;color:var(--muted2);line-height:1.9;list-style:decimal">
+            <li>Exportez le JSON ci-dessus</li>
+            <li>Ouvrez <code style="background:var(--bg);padding:1px 5px;border-radius:3px">js/data.js</code> dans votre dépôt GitHub</li>
+            <li>Remplacez le tableau <code style="background:var(--bg);padding:1px 5px;border-radius:3px">PRODUCTS = [...]</code> par le nouveau JSON</li>
+            <li>Committez et GitHub Pages se mettra à jour automatiquement</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script src="../js/data.js"></script>
+<script src="../js/main.js"></script>
+<script>
+// ── ADMIN AUTH ──
+const ADMIN_SESSION_KEY = 'tp_admin_session';
+
+function checkLogin() {
+  const s = sessionStorage.getItem(ADMIN_SESSION_KEY);
+  if (s) {
+    const data = JSON.parse(s);
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminApp').style.display = 'flex';
+    document.getElementById('adminUserLabel').textContent = '👤 ' + data.user;
+    initAdmin();
+  }
+}
+
+document.getElementById('loginBtn').addEventListener('click', doLogin);
+document.getElementById('loginPass').addEventListener('keydown', e => { if(e.key==='Enter') doLogin(); });
+
+function doLogin() {
+  const user = document.getElementById('loginUser').value.trim();
+  const pass = document.getElementById('loginPass').value;
+  const err  = document.getElementById('loginError');
+  if (user === SITE_CONFIG.adminUser && pass === SITE_CONFIG.adminPass) {
+    sessionStorage.setItem(ADMIN_SESSION_KEY, JSON.stringify({ user, ts: Date.now() }));
+    err.classList.remove('show');
+    checkLogin();
+  } else {
+    err.classList.add('show');
+    document.getElementById('loginPass').value = '';
+  }
+}
+
+document.getElementById('logoutBtn').addEventListener('click', e => {
+  e.preventDefault();
+  sessionStorage.removeItem(ADMIN_SESSION_KEY);
+  location.reload();
+});
+
+// ── SECTIONS ──
+function showSection(id) {
+  ['dashboard','products','add','export'].forEach(s => {
+    document.getElementById('sec-'+s).style.display = s===id ? 'block' : 'none';
+  });
+  document.querySelectorAll('.admin-nav-item').forEach(b => {
+    b.classList.toggle('active', b.dataset.section === id);
+  });
+  if (id === 'dashboard') renderDash();
+  if (id === 'products') renderFullTable();
+}
+document.querySelectorAll('.admin-nav-item').forEach(b => {
+  b.addEventListener('click', () => showSection(b.dataset.section));
+});
+
+// ── INIT ADMIN ──
+function initAdmin() {
+  document.getElementById('dateLabel').textContent = new Date().toLocaleDateString('fr-FR', {weekday:'long',year:'numeric',month:'long',day:'numeric'});
+  renderDash();
+}
+
+// ── DASHBOARD ──
+function renderDash() {
+  const products = JSON.parse(localStorage.getItem('tp_products') || '[]');
+  document.getElementById('statTotal').textContent = products.length;
+  document.getElementById('statFeatured').textContent = products.filter(p=>p.featured).length;
+  document.getElementById('statCats').textContent = [...new Set(products.map(p=>p.category))].length;
+  const t = document.getElementById('dashTable');
+  t.innerHTML = `<tr>${['Image','Nom','Catégorie','Prix','Avant'].map(h=>`<th>${h}</th>`).join('')}</tr>` +
+    products.slice(0,6).map(p => {
+      const cat = CATEGORIES.find(c=>c.id===p.category);
+      return `<tr>
+        <td><img src="${p.img}" class="prod-thumb" alt="${p.name}"></td>
+        <td style="font-weight:500">${p.name}</td>
+        <td style="color:var(--muted2)">${cat?.label||p.category}</td>
+        <td style="color:var(--accent)">${formatPrice(p.price)}</td>
+        <td>${p.featured?'<span style="color:var(--green)">✓</span>':'—'}</td>
+      </tr>`;
+    }).join('');
+}
+
+// ── FULL TABLE ──
+function renderFullTable() {
+  const products = JSON.parse(localStorage.getItem('tp_products') || '[]');
+  const t = document.getElementById('fullTable');
+  t.innerHTML = `<tr style="background:var(--bg2)">${['Image','Nom','Catégorie','Prix','Actions'].map(h=>`<th style="padding:12px 16px">${h}</th>`).join('')}</tr>` +
+    products.map(p => {
+      const cat = CATEGORIES.find(c=>c.id===p.category);
+      return `<tr>
+        <td style="padding:10px 16px"><img src="${p.img}" class="prod-thumb" alt="${p.name}"></td>
+        <td style="padding:10px 16px;font-weight:500">${p.name}</td>
+        <td style="padding:10px 16px;color:var(--muted2)">${cat?.label||p.category}</td>
+        <td style="padding:10px 16px;color:var(--accent)">${formatPrice(p.price)}</td>
+        <td style="padding:10px 16px">
+          <div class="action-btns">
+            <button class="btn btn-outline btn-sm" onclick="editProduct(${p.id})">Modifier</button>
+            <button class="btn btn-danger btn-sm" onclick="deleteProduct(${p.id})">Supprimer</button>
+          </div>
+        </td>
+      </tr>`;
+    }).join('');
+}
+
+// ── PRODUCT FORM ──
+let editMode = false;
+function resetForm() {
+  editMode = false;
+  document.getElementById('editId').value = '';
+  document.getElementById('productForm').reset();
+  document.getElementById('formTitle').textContent = 'Ajouter un produit';
+  document.getElementById('formSubmitBtn').textContent = 'Enregistrer le produit';
+  showSection('products');
+}
+
+function editProduct(id) {
+  const products = JSON.parse(localStorage.getItem('tp_products') || '[]');
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  editMode = true;
+  document.getElementById('editId').value = id;
+  document.getElementById('fName').value  = p.name;
+  document.getElementById('fCat').value   = p.category;
+  document.getElementById('fPrice').value = p.price;
+  document.getElementById('fBadge').value = p.badge || '';
+  document.getElementById('fBadgeColor').value = p.badgeColor || 'accent';
+  document.getElementById('fImg').value   = p.img;
+  document.getElementById('fDesc').value  = p.desc;
+  document.getElementById('fSpecs').value = (p.specs || []).join('\n');
+  document.getElementById('fFeatured').checked = !!p.featured;
+  document.getElementById('formTitle').textContent = 'Modifier le produit';
+  document.getElementById('formSubmitBtn').textContent = 'Mettre à jour';
+  showSection('add');
+}
+
+function deleteProduct(id) {
+  if (!confirm('Supprimer ce produit ?')) return;
+  let products = JSON.parse(localStorage.getItem('tp_products') || '[]');
+  products = products.filter(p => p.id !== id);
+  localStorage.setItem('tp_products', JSON.stringify(products));
+  showToast('Produit supprimé');
+  renderFullTable();
+}
+
+document.getElementById('productForm').addEventListener('submit', e => {
+  e.preventDefault();
+  let products = JSON.parse(localStorage.getItem('tp_products') || '[]');
+  const editId = parseInt(document.getElementById('editId').value);
+  const newP = {
+    id: editMode ? editId : Date.now(),
+    name: document.getElementById('fName').value.trim(),
+    category: document.getElementById('fCat').value,
+    price: parseInt(document.getElementById('fPrice').value),
+    badge: document.getElementById('fBadge').value.trim(),
+    badgeColor: document.getElementById('fBadgeColor').value,
+    img: document.getElementById('fImg').value.trim(),
+    desc: document.getElementById('fDesc').value.trim(),
+    specs: document.getElementById('fSpecs').value.split('\n').map(s=>s.trim()).filter(Boolean),
+    featured: document.getElementById('fFeatured').checked,
+  };
+  if (editMode) {
+    const idx = products.findIndex(p => p.id === editId);
+    if (idx !== -1) products[idx] = newP;
+  } else {
+    products.push(newP);
+  }
+  localStorage.setItem('tp_products', JSON.stringify(products));
+  showToast(editMode ? 'Produit mis à jour !' : 'Produit ajouté !');
+  resetForm();
+});
+
+// ── EXPORT ──
+function exportJSON() {
+  const products = JSON.parse(localStorage.getItem('tp_products') || '[]');
+  const blob = new Blob([JSON.stringify(products, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'catalog.json';
+  a.click();
+}
+function showRaw() {
+  const el = document.getElementById('rawJson');
+  const products = JSON.parse(localStorage.getItem('tp_products') || '[]');
+  if (el.style.display === 'none') {
+    el.textContent = JSON.stringify(products, null, 2);
+    el.style.display = 'block';
+  } else {
+    el.style.display = 'none';
+  }
+}
+
+// ── START ──
+checkLogin();
+</script>
+</body>
+</html>

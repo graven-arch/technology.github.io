@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TechPro.tg — Catalogue Produits</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="bg-grid"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+
+<nav>
+  <div class="container nav-inner">
+    <a href="index.html" class="nav-logo">
+      <div class="nav-logo-icon"><svg viewBox="0 0 24 24"><path d="M13 3L4 14h7l-2 7 9-11h-7l2-7z"/></svg></div>
+      Tech<span>Pro</span>.tg
+    </a>
+    <div class="nav-links" id="navLinks">
+      <a href="index.html" class="nav-link">Accueil</a>
+      <a href="produits.html" class="nav-link">Produits</a>
+      <a href="about.html" class="nav-link">À propos</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+    </div>
+    <div class="nav-cta">
+      <a href="contact.html" class="btn btn-primary btn-sm">Demander un devis</a>
+    </div>
+    <button class="nav-mobile-btn" id="navMobileBtn">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<div class="page-hero">
+  <div class="page-hero-bg"></div>
+  <div class="container">
+    <div class="section-label">Catalogue</div>
+    <h1>Nos <span class="gradient-text">produits</span></h1>
+    <p style="margin-top:12px">Équipements professionnels sélectionnés pour la performance et la fiabilité.</p>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:24px;flex-wrap:wrap;gap:12px">
+      <div class="filter-tabs" id="filterTabs"></div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <input type="text" class="finput" id="searchInput" placeholder="Rechercher un produit…" style="width:220px">
+        <span id="resultCount" style="font-size:12px;color:var(--muted);white-space:nowrap"></span>
+      </div>
+    </div>
+    <div class="products-grid stagger" id="productsGrid"></div>
+  </div>
+</section>
+
+<section class="section-sm cta-section">
+  <div class="container">
+    <div class="cta-inner">
+      <h2>Vous ne trouvez pas ce qu'il vous faut ?</h2>
+      <p>Notre équipe peut sourcer n'importe quel équipement professionnel. Contactez-nous avec vos besoins spécifiques.</p>
+      <div class="cta-actions">
+        <a href="contact.html" class="btn btn-primary">Nous contacter</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div class="footer-main">
+      <div class="footer-brand">
+        <a href="index.html" class="nav-logo">
+          <div class="nav-logo-icon"><svg viewBox="0 0 24 24"><path d="M13 3L4 14h7l-2 7 9-11h-7l2-7z"/></svg></div>
+          Tech<span>Pro</span>.tg
+        </a>
+        <p>Votre partenaire en équipements technologiques haute performance au Togo et en Afrique de l'Ouest.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Navigation</h5>
+        <ul>
+          <li><a href="index.html">Accueil</a></li>
+          <li><a href="produits.html">Catalogue</a></li>
+          <li><a href="about.html">À propos</a></li>
+          <li><a href="contact.html">Contact</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Catégories</h5>
+        <ul>
+          <li><a href="produits.html?cat=workstation">Stations de travail</a></li>
+          <li><a href="produits.html?cat=server">Serveurs</a></li>
+          <li><a href="produits.html?cat=network">Réseau</a></li>
+          <li><a href="produits.html?cat=display">Écrans</a></li>
+          <li><a href="produits.html?cat=accessory">Périphériques</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h5>Contact</h5>
+        <ul>
+          <li><a href="mailto:contact@techpro.tg">contact@techpro.tg</a></li>
+          <li><a href="tel:+22890000000">+228 90 00 00 00</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2025 TechPro.tg — Tous droits réservés</span>
+      <span>Lomé, Togo</span>
+    </div>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="productModal">
+  <div class="modal">
+    <div class="modal-head">
+      <h3 id="modalName">Produit</h3>
+      <button class="modal-close" id="modalClose">×</button>
+    </div>
+    <div class="modal-body">
+      <img class="modal-img" id="modalImg" src="" alt="">
+      <div class="modal-cat" id="modalCat"></div>
+      <div class="modal-desc" id="modalDesc"></div>
+      <div class="specs-list" id="modalSpecs"></div>
+      <div class="modal-price" id="modalPrice"></div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-outline" onclick="modal.close()">Fermer</button>
+      <button class="btn btn-primary" id="modalContactBtn">Demander un devis</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/main.js"></script>
+<script>
+let activeFilter = 'all';
+let searchQuery = '';
+
+function renderProducts() {
+  const grid = document.getElementById('productsGrid');
+  const count = document.getElementById('resultCount');
+  const q = searchQuery.toLowerCase();
+  const list = PRODUCTS.filter(p => {
+    const catOk = activeFilter === 'all' || p.category === activeFilter;
+    const searchOk = !q || p.name.toLowerCase().includes(q) || p.desc.toLowerCase().includes(q);
+    return catOk && searchOk;
+  });
+  count.textContent = `${list.length} produit${list.length!==1?'s':''}`;
+  grid.innerHTML = list.length
+    ? list.map(p => renderCard(p)).join('')
+    : `<div style="grid-column:1/-1;text-align:center;padding:60px 0;color:var(--muted)">Aucun produit trouvé.</div>`;
+}
+
+function initFilters() {
+  const tabs = document.getElementById('filterTabs');
+  const params = new URLSearchParams(location.search);
+  const urlCat = params.get('cat');
+  if (urlCat) activeFilter = urlCat;
+  tabs.innerHTML = CATEGORIES.map(c =>
+    `<button class="filter-tab${c.id===activeFilter?' active':''}" data-id="${c.id}">${c.label}</button>`
+  ).join('');
+  tabs.addEventListener('click', e => {
+    const btn = e.target.closest('.filter-tab');
+    if (!btn) return;
+    activeFilter = btn.dataset.id;
+    tabs.querySelectorAll('.filter-tab').forEach(b => b.classList.toggle('active', b===btn));
+    renderProducts();
+  });
+  document.getElementById('searchInput').addEventListener('input', e => {
+    searchQuery = e.target.value;
+    renderProducts();
+  });
+}
+
+document.addEventListener('DOMContentLoaded', () => { initFilters(); renderProducts(); });
+</script>
+</body>
+</html>
